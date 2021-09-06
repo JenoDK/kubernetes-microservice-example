@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: say-hello-service
+  labels:
+    app: say-hello-service
+spec:
+  type: NodePort
+  ports:
+    - name: tomcat
+      port: 8080
+  selector:
+    app: say-hello-service
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: say-hello-service-deployment
+spec:
+  selector:
+    matchLabels:
+      app: say-hello-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: say-hello-service
+    spec:
+      containers:
+        - name: say-hello-service
+          image: say-hello-service:0.0.1-SNAPSHOT
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 8080

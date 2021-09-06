@@ -1,0 +1,13 @@
+apiVersion: skaffold/v2beta19
+kind: Config
+metadata:
+  name: say-hello-service
+build:
+  artifacts:
+  - image: say-hello-service
+    context: .
+    jib: {}
+deploy:
+  kubectl:
+    manifests:
+    - kube.yaml

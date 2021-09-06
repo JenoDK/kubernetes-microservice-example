@@ -1,0 +1,42 @@
+plugins {
+	id 'org.springframework.boot' version '2.5.4'
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'com.google.cloud.tools.jib' version '3.1.4'
+	id 'java'
+}
+
+group = 'com.jeno'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+test {
+	useJUnitPlatform()
+}
+
+jib {
+	extraDirectories {
+		paths {
+			path {
+				from = '/Users/dekeyzer/git/SLIMS6.8/slims-microservices/jrebel'
+				into = '/home/jrebel'
+			}
+		}
+		// Not sure if this is needed, it doesn't hurt
+		permissions = [
+				'/home/jrebel': '777',
+				'/home/jrebel/lib/libjrebel64.so': '777',
+		]
+	}
+	container {
+		jvmFlags = ['-agentpath:/home/jrebel/lib/libjrebel64.so', '-Drebel.remoting_plugin=true', '-Drebel.log.file=/home/jrebel/jrebel.log']
+	}
+}
